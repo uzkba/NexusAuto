@@ -66,6 +66,7 @@ class Instructor(Base):
         Text, default="pendente", server_default="pendente"
     )
 
+    # Relacionamentos
     user: Mapped[User] = relationship()
     categories: Mapped[list["InstructorCategory"]] = relationship(
         cascade="all, delete-orphan"
@@ -73,10 +74,18 @@ class Instructor(Base):
     availability: Mapped[list["InstructorAvailability"]] = relationship(
         cascade="all, delete-orphan"
     )
-    vehicles: Mapped[list["Vehicle"]] = relationship(cascade="all, delete-orphan")
-    cities: Mapped[list[City]] = relationship(secondary=instructor_cities)
-    terrains: Mapped[list[TerrainType]] = relationship(secondary=instructor_terrains)
-
+    vehicles: Mapped[list["Vehicle"]] = relationship(
+        cascade="all, delete-orphan"
+    )
+    cities: Mapped[list[City]] = relationship(
+        secondary=instructor_cities
+    )
+    terrains: Mapped[list[TerrainType]] = relationship(
+        secondary=instructor_terrains
+    )
+    accreditations: Mapped[list["AccreditationSubmission"]] = relationship(
+        cascade="all, delete-orphan"
+    )
 
 class InstructorCategory(Base):
     __tablename__ = "instructor_categories"
@@ -149,3 +158,4 @@ class AccreditationSubmission(Base):
     submitted_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now()
     )
+    instructor: Mapped["Instructor"] = relationship()
