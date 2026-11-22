@@ -4,12 +4,14 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import './index.css'
 import { instrutoresRoutes } from './features/instrutores/routes'
+import { alunosRoutes } from './features/alunos/routes'
 import '@fontsource-variable/inter'
 
 const queryClient = new QueryClient()
 
 const router = createBrowserRouter([
   ...instrutoresRoutes,
+  ...alunosRoutes,
 ])
 
 createRoot(document.getElementById('root')!).render(
