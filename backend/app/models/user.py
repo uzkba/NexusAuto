@@ -1,11 +1,20 @@
 import uuid
 from datetime import datetime
+from typing import TYPE_CHECKING
 
 from sqlalchemy import CheckConstraint, DateTime, ForeignKey, Integer, Text, Uuid, func
-from sqlalchemy.dialects.postgresql import CITEXT
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.dialects.postgresql import ARRAY, CITEXT
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.database import Base
+from app.enums.enum import StudentObjective, VehicleInterest
+
+if TYPE_CHECKING:
+    from app.models import City
+
+
+def _sql_list(enum_cls) -> str:
+    return ", ".join(f"'{e.value}'" for e in enum_cls)
 
 
 class User(Base):
@@ -29,9 +38,28 @@ class User(Base):
 
 class Student(Base):
     __tablename__ = "students"
+    __table_args__ = (
+        CheckConstraint(
+            f"objectives <@ ARRAY[{_sql_list(StudentObjective)}]::text[]",
+            name="ck_students_objectives_valid",
+        ),
+        CheckConstraint(
+            "cardinality(objectives) >= 1",
+            name="ck_students_objectives_not_empty",
+        ),
+        CheckConstraint(
+            f"vehicle_interest IN ({_sql_list(VehicleInterest)})",
+            name="ck_students_vehicle_interest_valid",
+        ),
+    )
 
     user_id: Mapped[uuid.UUID] = mapped_column(
         Uuid, ForeignKey("users.id", ondelete="CASCADE"), primary_key=True
     )
-    city_ibge: Mapped[int | None] = mapped_column(Integer, ForeignKey("cities.ibge_code"))
-    vehicle_interest: Mapped[str | None] = mapped_column(Text)
+    city_ibge: Mapped[int] = mapped_column(
+        Integer, ForeignKey("cities.ibge_code"), nullable=False
+    )
+    vehicle_interest: Mapped[str] = mapped_column(Text, nullable=False)
+    objectives: Mapped[list[str]] = mapped_column(ARRAY(Text), nullable=False)
+
+    city: Mapped["City"] = relationship(lazy="joined")
