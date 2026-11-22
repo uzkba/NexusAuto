@@ -2,7 +2,14 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import settings
-from app.routers import health, instrutores_publico
+from app.core.errors import register_exception_handlers
+from app.routers import (
+    catalogo,
+    health,
+    instrutores_me,
+    instrutores_publico,
+    students,
+)
 
 app = FastAPI(title="NEXUS AUTO API")
 
@@ -14,5 +21,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+register_exception_handlers(app)
+
 app.include_router(health.router)
+app.include_router(catalogo.router)
 app.include_router(instrutores_publico.router)
+app.include_router(instrutores_me.router)
+app.include_router(students.router)
