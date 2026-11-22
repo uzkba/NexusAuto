@@ -4,6 +4,7 @@ from datetime import UTC, datetime, timedelta
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
+from app.enums.enum import StudentObjective, VehicleInterest
 from app.models import (
     AccreditationSubmission,
     City,
@@ -137,9 +138,23 @@ def seed_all(db: Session) -> None:
         db.add(User(id=uid, email=f"aluno{i + 1}@example.com", password_hash=_HASH,
                     display_name=_NOMES[i % len(_NOMES)], role="aluno"))
     db.flush()
-    for uid in alunos:
-        db.add(Student(user_id=uid, city_ibge=PATOS))
+
+    objetivos_todos = list(StudentObjective)
+    veiculos_todos = list(VehicleInterest)
+    for i, uid in enumerate(alunos):
+        objetivos = [objetivos_todos[i % 3].value]
+        if i % 4 == 0:  # alguns alunos com dois objetivos
+            objetivos.append(objetivos_todos[(i + 1) % 3].value)
+        db.add(
+            Student(
+                user_id=uid,
+                city_ibge=PATOS,
+                vehicle_interest=veiculos_todos[i % 2].value,
+                objectives=objetivos,
+            )
+        )
     db.flush()
+
     agora = datetime.now(UTC)
     for i, uid in enumerate(alunos):
         db.add(
