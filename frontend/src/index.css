@@ -1,0 +1,72 @@
+@import "tailwindcss";
+
+@theme {
+    --font-sans: "Inter Variable", system-ui, -apple-system, sans-serif;
+    --color-sand: #dcd8cb;
+    --color-cream: #f3f0e7;
+    --color-chip: #eae6d7;
+    --color-line: #eae5d4;
+    --color-ink: #1c1c1c;
+    --color-dark: #1f1f1f;
+    --color-muted: #8a8474;
+    --color-soft: #6e695c;
+    --color-accent: #f6b900;
+    --color-ok: #155743;
+    --color-ok-bg: #ddf0e5;
+    --color-ok-border: #bfe0cc;
+    --color-warn: #8a5a00;
+    --color-warn-bg: #fbefcf;
+    --color-warn-border: #ecd48f;
+}
+
+body {
+    background: var(--color-cream);
+    color: var(--color-ink);
+    -webkit-font-smoothing: antialiased;
+}
+
+@keyframes rise {
+    from {
+        opacity: 0;
+        transform: translateY(14px);
+    }
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .rise > * {
+        animation: rise 0.55s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+    }
+    .rise > :nth-child(2) {
+        animation-delay: 60ms;
+    }
+    .rise > :nth-child(3) {
+        animation-delay: 120ms;
+    }
+    .rise > :nth-child(4) {
+        animation-delay: 180ms;
+    }
+    .rise > :nth-child(5) {
+        animation-delay: 240ms;
+    }
+    .rise > :nth-child(6) {
+        animation-delay: 300ms;
+    }
+    .rise > :nth-child(7) {
+        animation-delay: 360ms;
+    }
+    .rise > :nth-child(8) {
+        animation-delay: 420ms;
+    }
+}
+
+.road {
+    background: repeating-linear-gradient(
+        90deg,
+        var(--color-accent) 0 28px,
+        transparent 28px 56px
+    );
+}
