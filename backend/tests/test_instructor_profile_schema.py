@@ -3,14 +3,14 @@ from pydantic import ValidationError
 
 from app.schemas.instructor_profile import InstructorProfileIn
 
-VALID = dict(
-    display_name="Carlos Mendes",
-    accreditation_number="DET-1111",
-    categories=["B", "A", "B"],
-    city_ibge_codes=[2510808],
-    terrain_ids=[1, 2],
-    phone="(83) 99999-0001",
-)
+VALID = {
+    "display_name": "Carlos Mendes",
+    "accreditation_number": "DET-1111",
+    "categories": ["B", "A", "B"],
+    "city_ibge_codes": [2510808],
+    "terrain_ids": [1, 2],
+    "phone": "(83) 99999-0001",
+}
 
 
 def test_valid_payload_is_normalized():
