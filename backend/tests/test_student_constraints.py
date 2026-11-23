@@ -5,12 +5,12 @@ from app.models import Student
 
 
 def make(aluno, **over):
-    data = dict(
-        user_id=aluno.id,
-        city_ibge=2510808,
-        vehicle_interest="car",
-        objectives=["first_license"],
-    )
+    data = {
+        "user_id": aluno.id,
+        "city_ibge": 2510808,
+        "vehicle_interest": "car",
+        "objectives": ["first_license"],
+    }
     data.update(over)
     return Student(**data)
 
