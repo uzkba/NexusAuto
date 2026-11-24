@@ -1,8 +1,7 @@
 import type { InstrutorPerfil } from "../api/types";
 import { formatDate } from "../format";
 
-const SELO_APROVADO = "Comprovante analisado pela plataforma";
-const SELO_PENDENTE = "Credenciamento em análise";
+const SELO_APROVADO = "Credenciamento verificado pela plataforma";
 
 function IconCircle({ children }: { children: React.ReactNode }) {
     return (
@@ -28,65 +27,31 @@ const Shield = () => (
     </svg>
 );
 
-const Clock = () => (
-    <svg
-        viewBox="0 0 24 24"
-        className="size-6"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        aria-hidden="true"
-    >
-        <circle cx="12" cy="12" r="9" />
-        <path d="M12 7v5l3 2" />
-    </svg>
-);
-
 export function AccreditationBadge({
     accreditation,
 }: {
     accreditation: InstrutorPerfil["accreditation"];
 }) {
-    if (accreditation.status === "aprovado") {
-        return (
-            <div
-                role="status"
-                className="flex items-center gap-3.5 rounded-3xl border border-ok-border bg-ok-bg p-4 text-ok"
-            >
-                <IconCircle>
-                    <Shield />
-                </IconCircle>
-                <div>
-                    <p className="font-bold leading-snug text-ink">
-                        {SELO_APROVADO}
-                    </p>
-                    <p className="mt-0.5 text-[13px] font-medium leading-snug">
-                        Análise da equipe NEXUS AUTO
-                        {accreditation.reviewed_at &&
-                            ` em ${formatDate(accreditation.reviewed_at)}`}
-                        . Não é validação oficial do Detran.
-                    </p>
-                </div>
-            </div>
-        );
-    }
+    if (accreditation.status !== "aprovado") return null;
+
     return (
         <div
             role="status"
-            className="flex items-center gap-3.5 rounded-3xl border border-warn-border bg-warn-bg p-4 text-warn"
+            data-testid="accreditation-badge"
+            className="flex items-center gap-3.5 rounded-3xl border border-ok-border bg-ok-bg p-4 text-ok"
         >
             <IconCircle>
-                <Clock />
+                <Shield />
             </IconCircle>
             <div>
                 <p className="font-bold leading-snug text-ink">
-                    {SELO_PENDENTE}
+                    {SELO_APROVADO}
                 </p>
                 <p className="mt-0.5 text-[13px] font-medium leading-snug">
-                    O comprovante deste instrutor ainda não foi analisado pela
-                    plataforma.
+                    Comprovante analisado pela equipe NEXUS AUTO
+                    {accreditation.reviewed_at &&
+                        ` em ${formatDate(accreditation.reviewed_at)}`}
+                    .
                 </p>
             </div>
         </div>
