@@ -4,7 +4,7 @@ from dataclasses import dataclass, replace
 from sqlalchemy import and_, func, select
 from sqlalchemy.orm import Session, contains_eager, selectinload
 
-from app.models import Review, User, Student
+from app.models import Review, Student, User
 from app.models.catalog import City, TerrainType
 from app.models.instructor import (
     Instructor,
@@ -12,8 +12,8 @@ from app.models.instructor import (
     InstructorCategory,
     Vehicle,
 )
-from app.schemas.instructor_search import InstructorCardOut, InstructorSearchOut
 from app.schemas.instructor_public import CityOut
+from app.schemas.instructor_search import InstructorCardOut, InstructorSearchOut
 from app.services.instructor_public_service import _photo_url
 from app.services.instructor_visibility import approved_only
 

@@ -1,7 +1,8 @@
 from typing import Annotated, Literal
 from uuid import UUID
-from pydantic import Field
+
 from fastapi import APIRouter, Depends, HTTPException, Query
+from pydantic import Field
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
@@ -17,11 +18,6 @@ from app.services.instructor_search_service import (
 )
 
 router = APIRouter(prefix="/instrutores", tags=["instrutores"])
-
-
-from typing import Annotated, Literal
-
-from pydantic import Field
 
 
 @router.get("", response_model=InstructorSearchOut)
