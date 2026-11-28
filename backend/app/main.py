@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
 from app.core.errors import register_exception_handlers
 from app.routers import (
+    avaliacoes,
     catalogo,
     health,
     instrutores_me,
@@ -27,4 +28,5 @@ app.include_router(health.router)
 app.include_router(catalogo.router)
 app.include_router(instrutores_publico.router)
 app.include_router(instrutores_me.router)
+app.include_router(avaliacoes.router)
 app.include_router(students.router)
