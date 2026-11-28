@@ -1,4 +1,4 @@
-import type { Availability } from "../api/types";
+import type { Availability } from "../types";
 import { WEEKDAYS, joinPeriods } from "../format";
 
 function groupByPeriods(availability: Availability[]) {

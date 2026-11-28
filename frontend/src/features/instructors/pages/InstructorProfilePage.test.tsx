@@ -1,10 +1,9 @@
-// @vitest-environment jsdom
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { cleanup, render, screen } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { InstrutorPerfil } from "../api/types";
-import InstrutorPerfilPage from "./InstrutorPerfilPage";
+import type { InstrutorPerfil } from "../types";
+import InstructorProfilePage from "./InstructorProfilePage";
 
 const perfil: InstrutorPerfil = {
     id: "11111111-1111-4111-8111-111111111111",
@@ -34,13 +33,11 @@ const perfil: InstrutorPerfil = {
 function mockFetch(status: number, body?: unknown) {
     vi.stubGlobal(
         "fetch",
-        vi
-            .fn()
-            .mockResolvedValue({
-                ok: status >= 200 && status < 300,
-                status,
-                json: async () => body,
-            }),
+        vi.fn().mockResolvedValue({
+            ok: status >= 200 && status < 300,
+            status,
+            json: async () => body,
+        }),
     );
 }
 
@@ -54,7 +51,7 @@ function renderPage() {
                 <Routes>
                     <Route
                         path="/instrutores/:id"
-                        element={<InstrutorPerfilPage />}
+                        element={<InstructorProfilePage />}
                     />
                 </Routes>
             </MemoryRouter>
@@ -68,13 +65,14 @@ afterEach(() => {
 });
 
 describe("BL01 · perfil público do instrutor", () => {
-    it("exibe dados, selo de comprovante analisado, média e telefone", async () => {
+    it("exibe dados, selo de credenciamento verificado, média e telefone", async () => {
         mockFetch(200, perfil);
         renderPage();
         expect(await screen.findByText("Carlos Mendes")).toBeTruthy();
         expect(
-            screen.getByText("Comprovante analisado pela plataforma"),
+            screen.getByText("Credenciamento verificado pela plataforma"),
         ).toBeTruthy();
+        expect(screen.getByText(/analisado pela equipe NEXUS AUTO/)).toBeTruthy();
         expect(screen.getByText(/23 avaliações/)).toBeTruthy();
         expect(screen.getByText("4,9")).toBeTruthy();
         expect(screen.getByText("Categoria B")).toBeTruthy();
@@ -90,17 +88,21 @@ describe("BL01 · perfil público do instrutor", () => {
         ).toBeTruthy();
     });
 
-    it("mostra credenciamento em análise para pendente", async () => {
+    it("não mostra selo de credenciamento para pendente", async () => {
         mockFetch(200, {
             ...perfil,
             accreditation: { status: "pendente", reviewed_at: null },
             reviews: { average: null, count: 0, items: [] },
         });
         renderPage();
+
+        // espera a página carregar: sem isso, a ausência do selo passaria por engano
+        expect(await screen.findByText("Carlos Mendes")).toBeTruthy();
+
         expect(
-            await screen.findByText("Credenciamento em análise"),
-        ).toBeTruthy();
-        expect(screen.getByText("Sem avaliações ainda")).toBeTruthy();
+            screen.queryByText("Credenciamento verificado pela plataforma"),
+        ).toBeNull();
+        expect(screen.queryByText("Credenciamento em análise")).toBeNull();
     });
 
     it("mostra estado de não encontrado no 404", async () => {

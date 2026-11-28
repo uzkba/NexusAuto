@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
-import { ApiError, apiGet } from "../../../lib/api";
+
 import type { InstrutorPerfil } from "./types";
+import { ApiError, apiGet } from "../../lib/api";
 
 export function isNotFound(error: unknown): boolean {
     return (

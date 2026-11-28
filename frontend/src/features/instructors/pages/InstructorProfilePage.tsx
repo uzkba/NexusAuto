@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { isNotFound, useInstrutorPerfil } from "../api/instrutores";
+
 import { TERRAIN_LABEL } from "../format";
 
 import { PageFrame } from "../components/PageFrame";
@@ -10,6 +10,7 @@ import { ContactCta } from "../components/ContactCta";
 import { Chip, ChipList, Section } from "../components/primitives";
 import { AvailabilityWeek } from "../components/AvailabilityWeek";
 import { VehicleList } from "../components/VehicleList";
+import { isNotFound, useInstrutorPerfil } from "../instructors";
 
 const HERO_BOX = "mx-auto max-w-6xl px-5 pb-10 pt-6 md:px-8 md:pb-14 md:pt-10";
 
@@ -43,7 +44,7 @@ function Loading() {
     );
 }
 
-export default function InstrutorPerfilPage() {
+export default function InstructorProfilePage() {
     const { id = "" } = useParams();
     const {
         data: p,

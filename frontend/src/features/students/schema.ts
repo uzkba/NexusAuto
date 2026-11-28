@@ -21,15 +21,12 @@ export const citySchema = z.object({
 });
 export type City = z.infer<typeof citySchema>;
 
-// Estado do formulário: cidade e veículo podem estar vazios (null) enquanto o aluno preenche.
-// O form guarda a cidade inteira (para exibir "Patos - PB"); o payload da API manda só o ibge_code.
 export type StudentProfileForm = {
   city: City | null;
   vehicle_interest: VehicleInterest | null;
   objectives: Objective[];
 };
 
-// Validação: em runtime rejeita null em cidade e veículo e exige ao menos um objetivo.
 export const studentProfileSchema = z.object({
   city: citySchema
     .nullable()

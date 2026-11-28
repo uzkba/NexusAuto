@@ -1,4 +1,4 @@
-import type { Vehicle } from "../api/types";
+import type { Vehicle } from "../types";
 
 const Moto = () => (
     <svg

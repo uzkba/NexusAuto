@@ -17,11 +17,24 @@ type Props = {
   id?: string;
   value: City | null;
   onChange: (city: City) => void;
+  onClear?: () => void;
   invalid?: boolean;
   describedBy?: string;
+  placeholder?: string;
+  variant?: "default" | "hero"; // novo
 };
 
-export function CityCombobox({ id, value, onChange, invalid, describedBy }: Props) {
+export function CityCombobox({
+  id,
+  value,
+  onChange,
+  onClear,
+  invalid,
+  describedBy,
+  placeholder,
+  variant = "default",
+}: Props) {
+  const hero = variant === "hero";
   const listId = useId();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
@@ -61,8 +74,37 @@ export function CityCombobox({ id, value, onChange, invalid, describedBy }: Prop
 
   const showEmpty = open && term.length >= 2 && !isFetching && results.length === 0;
 
+  const inputClass = hero
+    ? "h-14 w-full rounded-2xl border-0 bg-white pl-12 pr-12 text-base font-medium text-ink shadow-lg shadow-black/25 outline-none placeholder:font-normal placeholder:text-soft focus:ring-4 focus:ring-accent/70"
+    : `w-full rounded-md border px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500 ${
+        invalid ? "border-red-500" : "border-gray-300"
+      }`;
+
+  const listClass = hero
+    ? "absolute z-10 mt-2 max-h-64 w-full overflow-auto rounded-2xl border border-line bg-white py-1 text-ink shadow-xl"
+    : "absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md border border-gray-200 bg-white shadow-lg";
+
+  const optionClass = (i: number) =>
+    `cursor-pointer text-sm ${hero ? "px-4 py-3" : "px-3 py-2"} ${
+      i === active ? (hero ? "bg-chip" : "bg-blue-50") : ""
+    }`;
+
   return (
     <div className="relative">
+      {hero && (
+        <svg
+          viewBox="0 0 24 24"
+          className="pointer-events-none absolute left-4 top-1/2 size-5 -translate-y-1/2 text-soft"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.9"
+          aria-hidden="true"
+        >
+          <path d="M20 10.2c0 5.6-8 11.8-8 11.8S4 15.8 4 10.2a8 8 0 0 1 16 0Z" />
+          <circle cx="12" cy="10" r="3" />
+        </svg>
+      )}
+
       <input
         id={id}
         type="text"
@@ -73,7 +115,7 @@ export function CityCombobox({ id, value, onChange, invalid, describedBy }: Prop
         aria-invalid={invalid}
         aria-describedby={describedBy}
         autoComplete="off"
-        placeholder="Digite pelo menos 2 letras da sua cidade"
+        placeholder={placeholder ?? "Digite pelo menos 2 letras da sua cidade"}
         value={open ? query : label}
         onFocus={() => setOpen(true)}
         onBlur={() => setOpen(false)}
@@ -83,22 +125,39 @@ export function CityCombobox({ id, value, onChange, invalid, describedBy }: Prop
           setOpen(true);
         }}
         onKeyDown={onKeyDown}
-        className={`w-full rounded-md border px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500 ${
-          invalid ? "border-red-500" : "border-gray-300"
-        }`}
+        className={inputClass}
       />
 
-      {open && term.length >= 2 && (
-        <ul
-          id={listId}
-          role="listbox"
-          className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md border border-gray-200 bg-white shadow-lg"
+      {hero && onClear && value && !open && (
+        <button
+          type="button"
+          onClick={onClear}
+          aria-label="Limpar cidade"
+          className="absolute right-2 top-1/2 grid size-10 -translate-y-1/2 place-items-center rounded-full text-soft hover:bg-chip hover:text-ink"
         >
+          <svg
+            viewBox="0 0 24 24"
+            className="size-4"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.4"
+            strokeLinecap="round"
+            aria-hidden="true"
+          >
+            <path d="m6 6 12 12M18 6 6 18" />
+          </svg>
+        </button>
+      )}
+
+      {open && term.length >= 2 && (
+        <ul id={listId} role="listbox" className={listClass}>
           {isFetching && (
-            <li className="px-3 py-2 text-sm text-gray-500">Buscando...</li>
+            <li className={`${hero ? "px-4 py-3" : "px-3 py-2"} text-sm text-gray-500`}>
+              Buscando...
+            </li>
           )}
           {showEmpty && (
-            <li className="px-3 py-2 text-sm text-gray-500">
+            <li className={`${hero ? "px-4 py-3" : "px-3 py-2"} text-sm text-gray-500`}>
               Nenhuma cidade encontrada.
             </li>
           )}
@@ -113,9 +172,7 @@ export function CityCombobox({ id, value, onChange, invalid, describedBy }: Prop
                 select(city);
               }}
               onMouseEnter={() => setActive(i)}
-              className={`cursor-pointer px-3 py-2 text-sm ${
-                i === active ? "bg-blue-50" : ""
-              }`}
+              className={optionClass(i)}
             >
               {city.name} - {city.uf}
             </li>

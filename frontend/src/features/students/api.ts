@@ -49,7 +49,6 @@ export async function saveStudentProfile(
     } | null;
     const fields: Record<string, string> = {};
     for (const err of body?.errors ?? []) {
-      // o backend chama de city_ibge; o formulário guarda em "city"
       fields[err.field === "city_ibge" ? "city" : err.field] = err.message;
     }
     throw new ApiValidationError(fields);

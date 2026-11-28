@@ -5,10 +5,12 @@ export interface City {
     name: string;
     uf: string;
 }
+
 export interface Availability {
     weekday: number;
     periods: Period[];
 }
+
 export interface Vehicle {
     type: string;
     brand_model: string;
@@ -17,6 +19,7 @@ export interface Vehicle {
     dual_control: boolean;
     category: "A" | "B";
 }
+
 export interface ReviewItem {
     id: number;
     rating: number;
@@ -24,6 +27,7 @@ export interface ReviewItem {
     created_at: string;
     author_name: string;
 }
+
 export interface InstrutorPerfil {
     id: string;
     display_name: string;
@@ -41,4 +45,29 @@ export interface InstrutorPerfil {
         reviewed_at: string | null;
     };
     reviews: { average: number | null; count: number; items: ReviewItem[] };
+}
+
+export interface Terrain {
+    id: number;
+    code: string;
+}
+
+export interface InstructorCard {
+    id: string;
+    display_name: string;
+    photo_url: string | null;
+    cities: City[];
+    categories: ("A" | "B")[];
+    terrains: string[];
+    vehicle_types: string[];
+    rating_average: number | null;
+    rating_count: number;
+}
+
+export interface InstructorSearchResult {
+    items: InstructorCard[];
+    total: number;
+    page: number;
+    page_size: number;
+    default_city: City | null;
 }
