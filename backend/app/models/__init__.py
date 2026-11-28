@@ -1,4 +1,5 @@
 from app.models.catalog import City, TerrainType
+from app.models.contact_log import ContactLog
 from app.models.instructor import (
     AccreditationSubmission,
     Instructor,
@@ -12,7 +13,7 @@ from app.models.review import Review
 from app.models.user import Student, User
 
 __all__ = [
-    "AccreditationSubmission", "City", "Instructor", "InstructorAvailability",
+    "AccreditationSubmission", "City", "ContactLog", "Instructor", "InstructorAvailability",
     "InstructorCategory", "Review", "Student", "TerrainType", "User", "Vehicle",
     "instructor_cities", "instructor_terrains",
 ]
