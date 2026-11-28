@@ -1,7 +1,7 @@
 """student profile: objectives, required city and vehicle
 
 Revision ID: da5b9c03cb9e
-Revises: 48a34b814ef0
+Revises: fe90ac92ce13
 Create Date: 2026-11-22 00:04:02.516564
 
 """
@@ -14,7 +14,7 @@ from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
 revision: str = 'da5b9c03cb9e'
-down_revision: Union[str, Sequence[str], None] = '48a34b814ef0'
+down_revision: Union[str, Sequence[str], None] = 'fe90ac92ce13'
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
