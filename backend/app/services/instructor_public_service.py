@@ -14,8 +14,8 @@ from app.schemas.instructor_public import (
     ReviewsOut,
     VehicleOut,
 )
+from app.services.instructor_visibility import approved_only
 
-VISIBLE_STATUSES = ("aprovado", "pendente")
 _PERIOD_ORDER = {"manha": 0, "tarde": 1, "noite": 2}
 
 
@@ -44,36 +44,35 @@ def get_public_profile(
     db: Session, instructor_id: UUID, viewer: User | None
 ) -> InstructorPublicOut:
     instructor = db.scalars(
-        select(Instructor)
-        .join(Instructor.user)
-        .options(
-            contains_eager(Instructor.user),
-            selectinload(Instructor.categories),
-            selectinload(Instructor.cities),
-            selectinload(Instructor.terrains),
-            selectinload(Instructor.availability),
-            selectinload(Instructor.vehicles),
-        )
-        .where(
-            Instructor.user_id == instructor_id,
-            Instructor.verification_status.in_(VISIBLE_STATUSES),
-            User.deleted_at.is_(None),
+        approved_only(
+            select(Instructor)
+            .join(Instructor.user)
+            .options(
+                contains_eager(Instructor.user),
+                selectinload(Instructor.categories),
+                selectinload(Instructor.cities),
+                selectinload(Instructor.terrains),
+                selectinload(Instructor.availability),
+                selectinload(Instructor.vehicles),
+            )
+            .where(
+                Instructor.user_id == instructor_id,
+                User.deleted_at.is_(None),
+            )
         )
     ).one_or_none()
     if instructor is None:
         raise InstructorNotFoundError
 
-    reviewed_at = None
-    if instructor.verification_status == "aprovado":
-        reviewed_at = db.scalar(
-            select(AccreditationSubmission.reviewed_at)
-            .where(
-                AccreditationSubmission.instructor_id == instructor_id,
-                AccreditationSubmission.status == "aprovado",
-            )
-            .order_by(AccreditationSubmission.reviewed_at.desc())
-            .limit(1)
+    reviewed_at = db.scalar(
+        select(AccreditationSubmission.reviewed_at)
+        .where(
+            AccreditationSubmission.instructor_id == instructor_id,
+            AccreditationSubmission.status == "aprovado",
         )
+        .order_by(AccreditationSubmission.reviewed_at.desc())
+        .limit(1)
+    )
 
     average, count = db.execute(
         select(func.avg(Review.rating), func.count(Review.id)).where(
