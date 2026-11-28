@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 
 from app.models import ContactLog, Instructor, Review, User
 from app.schemas.review import MyReviewStatusOut, ReviewIn, ReviewOut
-from app.services.instructor_public_service import VISIBLE_STATUSES
+from app.services.instructor_visibility import approved_only
 
 
 class InstructorNotFoundError(Exception):
@@ -28,12 +28,13 @@ class ReviewNotFoundError(Exception):
 
 def _ensure_visible_instructor(db: Session, instructor_id: UUID) -> None:
     found = db.scalar(
-        select(Instructor.user_id)
-        .join(Instructor.user)
-        .where(
-            Instructor.user_id == instructor_id,
-            Instructor.verification_status.in_(VISIBLE_STATUSES),
-            User.deleted_at.is_(None),
+        approved_only(
+            select(Instructor.user_id)
+            .join(Instructor.user)
+            .where(
+                Instructor.user_id == instructor_id,
+                User.deleted_at.is_(None),
+            )
         )
     )
     if found is None:

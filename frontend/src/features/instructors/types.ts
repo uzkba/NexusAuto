@@ -1,0 +1,95 @@
+export type Period = "manha" | "tarde" | "noite";
+
+export interface City {
+    ibge_code: number;
+    name: string;
+    uf: string;
+}
+
+export interface Availability {
+    weekday: number;
+    periods: Period[];
+}
+
+export interface Vehicle {
+    type: string;
+    brand_model: string;
+    year: number;
+    transmission: "manual" | "automatico";
+    dual_control: boolean;
+    category: "A" | "B";
+}
+
+export interface ReviewItem {
+    id: number;
+    rating: number;
+    comment: string | null;
+    created_at: string;
+    author_name: string;
+}
+
+export interface ReviewOut {
+    id: number;
+    instructor_id: string;
+    student_id: string;
+    rating: number;
+    comment: string | null;
+    created_at: string;
+    updated_at: string;
+}
+
+export interface MyReviewStatus {
+    can_review: boolean;
+    has_contact: boolean;
+    reason: "contact_required" | null;
+    review: ReviewOut | null;
+}
+
+export interface ReviewPayload {
+    rating: number;
+    comment: string | null;
+}
+
+export interface InstrutorPerfil {
+    id: string;
+    display_name: string;
+    photo_url: string | null;
+    bio: string | null;
+    training_structure: string | null;
+    phone: string | null;
+    cities: City[];
+    categories: ("A" | "B")[];
+    terrains: string[];
+    availability: Availability[];
+    vehicles: Vehicle[];
+    accreditation: {
+        status: "aprovado" | "pendente";
+        reviewed_at: string | null;
+    };
+    reviews: { average: number | null; count: number; items: ReviewItem[] };
+}
+
+export interface Terrain {
+    id: number;
+    code: string;
+}
+
+export interface InstructorCard {
+    id: string;
+    display_name: string;
+    photo_url: string | null;
+    cities: City[];
+    categories: ("A" | "B")[];
+    terrains: string[];
+    vehicle_types: string[];
+    rating_average: number | null;
+    rating_count: number;
+}
+
+export interface InstructorSearchResult {
+    items: InstructorCard[];
+    total: number;
+    page: number;
+    page_size: number;
+    default_city: City | null;
+}

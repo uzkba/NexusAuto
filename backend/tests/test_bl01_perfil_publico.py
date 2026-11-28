@@ -40,13 +40,8 @@ def test_bl01_perfil_publico_telefone_visivel_para_autenticado(client):
     assert client.get(f"/instrutores/{CARLOS_ID}").json()["phone"] == "83999990001"
 
 
-def test_bl01_perfil_publico_pendente_retorna_status_pendente(client):
-    r = client.get(f"/instrutores/{MARCOS_ID}")
-    assert r.status_code == 200
-    body = r.json()
-    assert body["accreditation"] == {"status": "pendente", "reviewed_at": None}
-    assert body["reviews"] == {"average": None, "count": 0, "items": []}
-    assert body["photo_url"] is None
+def test_bl01_perfil_publico_pendente_retorna_404(client):
+    assert client.get(f"/instrutores/{MARCOS_ID}").status_code == 404
 
 
 def test_bl01_perfil_publico_rejeitado_retorna_404(client):
