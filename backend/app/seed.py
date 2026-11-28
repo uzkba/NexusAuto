@@ -8,6 +8,7 @@ from app.enums.enum import StudentObjective, VehicleInterest
 from app.models import (
     AccreditationSubmission,
     City,
+    ContactLog,
     Instructor,
     InstructorAvailability,
     InstructorCategory,
@@ -158,6 +159,13 @@ def _seed_base(db: Session) -> None:
     agora = datetime.now(UTC)
     for i, uid in enumerate(alunos):
         db.add(
+            ContactLog(
+                student_id=uid,
+                instructor_id=CARLOS_ID,
+                created_at=agora - timedelta(days=i, hours=1),
+            )
+        )
+        db.add(
             Review(
                 student_id=uid, instructor_id=CARLOS_ID,
                 rating=4 if i in (7, 15) else 5,
@@ -165,6 +173,13 @@ def _seed_base(db: Session) -> None:
                 created_at=agora - timedelta(days=i),
             )
         )
+    db.add(
+        ContactLog(
+            student_id=alunos[0],
+            instructor_id=MARCOS_ID,
+            created_at=agora - timedelta(hours=2),
+        )
+    )
     db.flush()
 
 

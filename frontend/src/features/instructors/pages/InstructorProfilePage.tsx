@@ -9,6 +9,7 @@ import { AccreditationBadge } from "../components/AccreditationBadge";
 import { ContactCta } from "../components/ContactCta";
 import { Chip, ChipList, Section } from "../components/primitives";
 import { AvailabilityWeek } from "../components/AvailabilityWeek";
+import { ReviewSection } from "../components/ReviewSection";
 import { VehicleList } from "../components/VehicleList";
 import { isNotFound, useInstrutorPerfil } from "../instructors";
 
@@ -180,6 +181,13 @@ export default function InstructorProfilePage() {
                     className="md:col-span-2 lg:col-span-3"
                 >
                     <VehicleList vehicles={p.vehicles} />
+                </Section>
+
+                <Section
+                    title="Avaliar instrutor"
+                    className="md:col-span-2 lg:col-span-3"
+                >
+                    <ReviewSection key={p.id} instructorId={p.id} />
                 </Section>
 
             </div>

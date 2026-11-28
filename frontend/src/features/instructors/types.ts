@@ -28,6 +28,28 @@ export interface ReviewItem {
     author_name: string;
 }
 
+export interface ReviewOut {
+    id: number;
+    instructor_id: string;
+    student_id: string;
+    rating: number;
+    comment: string | null;
+    created_at: string;
+    updated_at: string;
+}
+
+export interface MyReviewStatus {
+    can_review: boolean;
+    has_contact: boolean;
+    reason: "contact_required" | null;
+    review: ReviewOut | null;
+}
+
+export interface ReviewPayload {
+    rating: number;
+    comment: string | null;
+}
+
 export interface InstrutorPerfil {
     id: string;
     display_name: string;
