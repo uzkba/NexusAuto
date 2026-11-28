@@ -84,7 +84,7 @@ def _criar_instrutor(
     )
 
 
-def seed_all(db: Session) -> None:
+def _seed_base(db: Session) -> None:
     if db.get(User, CARLOS_ID):
         return
 
@@ -168,6 +168,75 @@ def seed_all(db: Session) -> None:
     db.flush()
 
 
+def _extra_id(n: int) -> uuid.UUID:
+    return uuid.UUID(int=0x2000 + n)
+
+
+def seed_busca(db: Session) -> None:
+    if db.get(User, _extra_id(1)):
+        return
+
+    _criar_instrutor(
+        db, id=_extra_id(1), nome="Ana Souza", email="ana@nexusauto.dev",
+        status="aprovado", photo_key=None,
+        experiencia="Aulas de direção urbana para iniciantes.",
+        estrutura=None, telefone="83999990011", categorias=["B"],
+        cidades=[PATOS], terrenos=[1],
+        disponibilidade={0: ["tarde"], 1: ["manha"]},
+        veiculos=[
+            Vehicle(type="carro", brand_model="Compacto automático", year=2023,
+                    transmission="automatico", dual_control=True, category="B"),
+        ],
+    )
+    _criar_instrutor(
+        db, id=_extra_id(2), nome="Roberto Lima", email="roberto@nexusauto.dev",
+        status="aprovado", photo_key=None,
+        experiencia="Instrutor de moto, com treino em rodovia.",
+        estrutura=None, telefone="83999990012", categorias=["A"],
+        cidades=[SANTA_LUZIA], terrenos=[2],
+        disponibilidade={2: ["manha"]},
+        veiculos=[
+            Vehicle(type="moto", brand_model="Moto 150cc", year=2021,
+                    transmission="manual", dual_control=False, category="A"),
+        ],
+    )
+    _criar_instrutor(
+        db, id=_extra_id(3), nome="Fernanda Lopes", email="fernanda@nexusauto.dev",
+        status="aprovado", photo_key=None,
+        experiencia="Categorias A e B, todos os tipos de terreno.",
+        estrutura="Pátio de treino e percurso em estrada de terra.",
+        telefone="83999990013", categorias=["A", "B"],
+        cidades=[PATOS, SAO_MAMEDE], terrenos=[1, 2, 3],
+        disponibilidade={0: ["manha"], 4: ["noite"]},
+        veiculos=[
+            Vehicle(type="carro", brand_model="Sedan 1.6", year=2020,
+                    transmission="manual", dual_control=True, category="B"),
+            Vehicle(type="moto", brand_model="Moto 160cc", year=2022,
+                    transmission="manual", dual_control=False, category="A"),
+        ],
+    )
+
+    for n in range(4, 14):
+        _criar_instrutor(
+            db, id=_extra_id(n), nome=f"Instrutor Teste {n}",
+            email=f"teste{n}@nexusauto.dev", status="aprovado", photo_key=None,
+            experiencia="Instrutor gerado para teste de paginação.",
+            estrutura=None, telefone=f"8399999{n:04d}", categorias=["B"],
+            cidades=[PATOS], terrenos=[1],
+            disponibilidade={n % 7: ["manha"]},
+            veiculos=[
+                Vehicle(type="carro", brand_model="Hatch 1.0", year=2020,
+                        transmission="manual", dual_control=True, category="B"),
+            ],
+        )
+    db.flush()
+
+
+def seed_all(db: Session) -> None:
+    _seed_base(db)
+    seed_busca(db)
+
+
 def main() -> None:
     db = next(get_db())
     try:
@@ -175,8 +244,8 @@ def main() -> None:
         db.commit()
         print("Seed ok.")
         print(f"  aprovado:  /instrutores/{CARLOS_ID}")
-        print(f"  pendente:  /instrutores/{MARCOS_ID}")
-        print(f"  rejeitado: /instrutores/{PAULO_ID} (404)")
+        print(f"  pendente:  /instrutores/{MARCOS_ID} (404 no público)")
+        print(f"  rejeitado: /instrutores/{PAULO_ID} (404 no público)")
     finally:
         db.close()
 
