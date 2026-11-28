@@ -9,6 +9,7 @@ import { AccreditationBadge } from "../components/AccreditationBadge";
 import { ContactCta } from "../components/ContactCta";
 import { Chip, ChipList, Section } from "../components/primitives";
 import { AvailabilityWeek } from "../components/AvailabilityWeek";
+import { ReviewSection } from "../components/ReviewSection";
 import { VehicleList } from "../components/VehicleList";
 
 const HERO_BOX = "mx-auto max-w-6xl px-5 pb-10 pt-6 md:px-8 md:pb-14 md:pt-10";
@@ -179,6 +180,13 @@ export default function InstrutorPerfilPage() {
                     className="md:col-span-2 lg:col-span-3"
                 >
                     <VehicleList vehicles={p.vehicles} />
+                </Section>
+
+                <Section
+                    title="Avaliar instrutor"
+                    className="md:col-span-2 lg:col-span-3"
+                >
+                    <ReviewSection key={p.id} instructorId={p.id} />
                 </Section>
 
             </div>
